@@ -73,5 +73,41 @@
     };
     return this.clientHeight;
   };
+
+  var Ajax = window.Ajax = {};
+
+  Ajax.get = function(url){
+    return new XHR("GET", url);
+  };
+  Ajax.getJson = function(){
+
+  };
+  Ajax.post = function(url, data){
+    return new XHR("POST", url, data);
+  };
+
+  class XHR extends XMLHttpRequest {
+    constructor(connect, url){
+      const xhr = super();
+      /* ここで設定を行う記述
+      // if(xhr.overrideMimeType) xhr.overrideMimeType("text/plain; charset=x-user-defined");
+      //                          xhr.overrideMimeType("application/xml");
+      //                          xhr.overrideMimeType("text/plain; charset=Shift_JIS");
+      // if(xhr.timeout !== undefined) xhr.timeout = 2000;
+      */
+      xhr.responseType = "json";
+      return new Promise(function(resolve, reject){
+        xhr.open(connect,url);
+        xhr.onload = function(){
+          xhr.status == 200 ? resolve(xhr.response) : reject(new Error(xhr.statusText));
+        };
+        xhr.onerror = reject;
+        connect === "GET" ? xhr.send() : xhr.send(arguments[2]);
+      });
+    };
+  };
+
   console.log(WEP);
+  console.log(Ajax);
+  console.log(window);
 })();
